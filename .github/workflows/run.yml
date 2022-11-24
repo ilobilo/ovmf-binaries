@@ -1,7 +1,7 @@
-name: Install libstdc++ headers
+name: Download OVMF
 on: [push, workflow_dispatch]
 jobs:
-  install-headers:
+  download:
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies
@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name 'ilobilo'
           git config user.email 'ilobilo@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ilobilo/libstdcxx-headers.git
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ilobilo/ovmf-binaries.git
           git fetch --all
           git add .
           git commit -m "Upload binaries [ci skip]"
