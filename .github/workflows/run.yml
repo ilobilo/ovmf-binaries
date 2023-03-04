@@ -1,0 +1,40 @@
+name: Download OVMF
+on:
+  schedule:
+   - cron: '0 0 * * *'
+  push:
+  workflow_dispatch:
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: sudo apt install wget -y
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Git config
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Download aarch64 ovmf
+        run: wget -O OVMF_AA64.fd https://retrage.github.io/edk2-nightly/bin/RELEASEAARCH64_QEMU_EFI.fd
+
+      - name: Download x86_64 ovmf
+        run: wget -O OVMF_X64.fd https://retrage.github.io/edk2-nightly/bin/RELEASEX64_OVMF.fd
+
+      - name: Download arm ovmf
+        run: wget -O OVMF_ARM.fd https://retrage.github.io/edk2-nightly/bin/RELEASEARM_QEMU_EFI.fd
+
+      - name: Download ia32 ovmf
+        run: wget -O OVMF_IA32.fd https://retrage.github.io/edk2-nightly/bin/RELEASEIa32_OVMF.fd
+
+      - name: Push
+        run: |
+          git config user.name 'ilobilo'
+          git config user.email 'ilobilo@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ilobilo/ovmf-binaries.git
+          git fetch --all
+          git add .
+          git commit -m "Upload binaries [ci skip]"
+          git push origin master
