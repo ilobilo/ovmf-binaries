@@ -13,6 +13,8 @@ jobs:
 
       - name: Check out repository code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Git config
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -35,6 +37,7 @@ jobs:
           git config user.email 'ilobilo@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ilobilo/ovmf-binaries.git
           git fetch --all
+          git reset --mixed 90877e01ff6a858085c560454e7405a0311ff790
           git add .
           git commit -m "Upload binaries [ci skip]"
-          git push origin master
+          git push --force origin master
