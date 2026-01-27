@@ -22,9 +22,11 @@ jobs:
       - name: Download
         run: |
           echo "$(curl --silent "https://api.github.com/repos/osdev0/edk2-ovmf-nightly/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')" >> LATEST_RELEASE
-          curl -o OVMF_X64.fd -L https://github.com/osdev0/edk2-ovmf-nightly/releases/download/$(cat LATEST_RELEASE)/ovmf-code-x86_64.fd
-          curl -o OVMF_AA64.fd -L https://github.com/osdev0/edk2-ovmf-nightly/releases/download/$(cat LATEST_RELEASE)/ovmf-code-arch64.fd
-          rm LATEST_RELEASE
+          curl -o edk2-ovmf.tar.gz -L https://github.com/osdev0/edk2-ovmf-nightly/releases/download/$(cat LATEST_RELEASE)/edk2-ovmf.tar.gz
+          tar xzf edk2-ovmf.tar.gz
+          mv edk2-ovmf/ovmf-code-x86_64.fd OVMF_X64.fd
+          mv edk2-ovmf/ovmf-code-aarch64.fd OVMF_AA64.fd
+          rm -rf LATEST_RELEASE edk2-ovmf edk2-ovmf.tar.gz
 
       - name: Push
         run: |
